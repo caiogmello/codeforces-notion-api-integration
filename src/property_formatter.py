@@ -8,50 +8,50 @@ class PropertyFormatter:
 
     def format_submission(self, submission: dict) -> dict:
         return {
-            "Id": self.format_id(submission["id"]),
-            "ContestId": self.format_contest_id(submission["contestId"]),
-            "Name": self.format_name(submission["name"]),
-            "Index": self.format_index(submission["index"]),
-            "Rating": self.format_rating(submission["rating"]),
-            "Tags": self.format_tags(submission["tags"]),
-            "Time": self.format_time(submission["time"]),
-            "URL": self.format_url(submission["url"]),
+            "Id": self._format_id(submission["id"]),
+            "ContestId": self._format_contest_id(submission["contestId"]),
+            "Name": self._format_name(submission["name"]),
+            "Index": self._format_index(submission["index"]),
+            "Rating": self._format_rating(submission["rating"]),
+            "Tags": self._format_tags(submission["tags"]),
+            "Time": self._format_time(submission["time"]),
+            "URL": self._format_url(submission["url"]),
         }
 
-    def format_id(self, id: int) -> dict:
+    def _format_id(self, id: int) -> dict:
         return {
             "type": "title",
             "title": [{"type": "text", "text": {"content": str(id)}}],
         }
 
-    def format_contest_id(self, contest_id: int) -> dict:
+    def _format_contest_id(self, contest_id: int) -> dict:
         return {
             "type": "rich_text",
             "rich_text": [{"type": "text", "text": {"content": str(contest_id)}}],
         }
 
-    def format_name(self, name: str) -> dict:
+    def _format_name(self, name: str) -> dict:
         return {"type": "rich_text", "rich_text": [{"type": "text", "text": {"content": name}}]}
 
-    def format_index(self, index: str) -> dict:
+    def _format_index(self, index: str) -> dict:
         return {
             "type": "rich_text",
             "rich_text": [{"type": "text", "text": {"content": index}}],
         }
 
-    def format_rating(self, rating: int) -> dict:
+    def _format_rating(self, rating: int) -> dict:
         return {"type": "number", "number": rating}
 
-    def format_multi_select(self, tag: str):
+    def _format_multi_select(self, tag: str):
         return {"name": tag, "color": self._get_tag_color(tag)}
 
-    def format_tags(self, tags: list) -> dict:
+    def _format_tags(self, tags: list) -> dict:
         return {
             "type": "multi_select",
             "multi_select": [self.format_multi_select(tag) for tag in tags],
         }
 
-    def format_time(self, time: str):
+    def _format_time(self, time: str):
         return {
             "type": "date",
             "date": {
@@ -62,7 +62,7 @@ class PropertyFormatter:
             },
         }
 
-    def format_url(self, url: str) -> dict:
+    def _format_url(self, url: str) -> dict:
         return {"type": "url", "url": url}
     
     def _get_tag_color(self, tag: str) -> str:
