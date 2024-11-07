@@ -36,7 +36,7 @@ class CodeforcesAPI:
     def only_ok_submissions(self, submissions) -> dict:
         return [sub for sub in submissions["result"] if sub['verdict'] == 'OK']
 
-    def convert_seconds_to_date(self, seconds):
+    def seconds_to_date(self, seconds):
         try:
             date_time = datetime.datetime.fromtimestamp(seconds)
             formatted_date = date_time.strftime('%d/%m/%Y %H:%M:%S')
@@ -58,7 +58,7 @@ class CodeforcesAPI:
                 "name": submission['problem']['name'],
                 "rating": None,
                 "tags": submission['problem']['tags'],
-                "time": self.convert_seconds_to_date(submission['creationTimeSeconds']),
+                "time": self.seconds_to_date(submission['creationTimeSeconds']),
                 "url": f"https://codeforces.com/{contest}/{submission['contestId']}/problem/{submission['problem']['index']}"
             }
         try:
