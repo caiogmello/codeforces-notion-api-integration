@@ -1,9 +1,14 @@
-from src.codeforces_api import CodeforcesAPI
-from src.notion_api import NotionAPI
 import os
 import json
 from tqdm import tqdm
 from datetime import datetime
+try:
+    from src.codeforces_api import CodeforcesAPI
+    from src.notion_api import NotionAPI
+except:
+    from codeforces_api import CodeforcesAPI
+    from notion_api import NotionAPI
+
 
 class DBupdater:
     def __init__(self, notion_token, db_id, user_handle):
@@ -32,20 +37,17 @@ class DBupdater:
             for submission in tqdm(self._cf_submissions):
                 self._notion_api.create_page(submission)
         else:
-            i = 0
-            pbar = tqdm(total=len(self._cf_submissions))
 
             object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
             last_db_datetime = datetime.strptime(self._db_data[0]['properties']['Time']['date']['start'], '%Y-%m-%dT%H:%M:%S.%f%z')
 
+            i = 0
             while object_datetime > last_db_datetime:
-                if str(self._cf_submissions[i]['id']) != self._db_data[0]['properties']['Id']['title'][0]['text']['content']:
-                    self._notion_api.create_page(self._cf_submissions[i])
                 i += 1
-                pbar.update(1)
                 object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
-
-            pbar.close()
+            
+            for j in tqdm(range(i-1)):
+                self._notion_api.create_page(self._cf_submissions[j])
             
         self._notion_api.get_pages(1)
         print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems.")
