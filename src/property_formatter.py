@@ -6,11 +6,11 @@ class PropertyFormatter:
     def __init__(self):
         self._colors = ["blue", "brown", "default", "gray", "green", "pink", "orange", "purple", "red", "yellow"]
         self._tag_colors = {}
-        self._db_data = None
+        self._db_info = None
 
     def set_db_data(self):
-        with open(os.path.join("src/json/", 'notion_db.json'), 'r', encoding='utf8') as f:
-            self._db_data = json.load(f)
+        with open(os.path.join("src/json/", 'notion_db_info.json'), 'r', encoding='utf8') as f:
+            self._db_info = json.load(f)
         self._set_all_tag_colors()
 
     def format_submission(self, submission: dict) -> dict:
@@ -82,9 +82,8 @@ class PropertyFormatter:
         return self._colors[hash(tag) % len(self._colors)]
     
     def _set_all_tag_colors(self):
-        for obj in self._db_data:
-            for tag in obj["properties"]["Tags"]["multi_select"]:
-                self._tag_colors[tag["name"]] = tag["color"]
+        for tag in self._db_info["properties"]["Tags"]["multi_select"]['options']:
+            self._tag_colors[tag["name"]] = tag["color"]
 
         return self._tag_colors
 
