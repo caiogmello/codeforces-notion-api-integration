@@ -22,9 +22,19 @@ class NotionAPI:
 
         url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
 
-        payload = {"page_size": num_pages}
+        payload = {"page_size": num_pages,
+                   "sorts": [{
+                          "property": "Time",
+                          "direction": "descending"          
+                            }],
+                    }
+
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
 
+
+        if response.status_code != 200:
+            raise Exception(f"Request failed: {response.json()['message']}")
+        
         data = response.json()
         results = data["results"]
 
@@ -35,13 +45,10 @@ class NotionAPI:
             data = response.json()
             results.extend(data["results"])
 
-        if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
-        else:
-            with open(os.path.join("./json/", 'notion_db.json'), 'w', encoding='utf8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=4)
-            
-            return results
+        with open(os.path.join("./json/", 'notion_db.json'), 'w', encoding='utf8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        
+        return results
 
     def set_database_id(self, database_id: str):
         self._DATABASE_ID = database_id
@@ -69,4 +76,5 @@ class NotionAPI:
         else:
             return response.json()
     
+
         
