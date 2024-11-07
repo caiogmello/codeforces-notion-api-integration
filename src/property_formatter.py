@@ -1,6 +1,5 @@
 import datetime
 
-
 class PropertyFormatter:
     def __init__(self):
         self._colors = ["blue", "brown", "default", "gray", "green", "pink", "orange", "purple", "red", "yellow"]
@@ -48,20 +47,22 @@ class PropertyFormatter:
     def _format_tags(self, tags: list) -> dict:
         return {
             "type": "multi_select",
-            "multi_select": [self.format_multi_select(tag) for tag in tags],
+            "multi_select": [self._format_multi_select(tag) for tag in tags],
         }
 
+
+
     def _format_time(self, time: str):
+        local_time = datetime.datetime.strptime(time, "%m/%d/%Y %H:%M:%S")
+        local_timezone = datetime.datetime.now().astimezone().tzinfo
+        local_time = local_time.replace(tzinfo=local_timezone)
         return {
             "type": "date",
             "date": {
-                "start": datetime.datetime.strptime(
-                    time, "%d/%m/%Y %H:%M:%S"
-                ).isoformat(),
+                "start": local_time.isoformat(),
                 "end": None,
             },
         }
-
     def _format_url(self, url: str) -> dict:
         return {"type": "url", "url": url}
     
