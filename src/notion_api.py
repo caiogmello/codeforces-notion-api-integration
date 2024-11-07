@@ -1,7 +1,7 @@
 import json
 import requests
 from property_formatter import PropertyFormatter
-
+import os
 
 class NotionAPI:
     def __init__(self, token):
@@ -38,7 +38,7 @@ class NotionAPI:
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
         else:
-            with open('db.json', 'w', encoding='utf8') as f:
+            with open(os.path.join("./json/", 'notion_db.json'), 'w', encoding='utf8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
             
             return results

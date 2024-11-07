@@ -1,6 +1,7 @@
 import requests
 import json
 import datetime
+import os
 
 class CodeforcesAPI:
     def __init__(self):
@@ -50,6 +51,7 @@ class CodeforcesAPI:
             contest = 'contest'
 
         dct = {
+                "handle": submission['author']['members'][0]['handle'],
                 "id": submission['id'],
                 "contestId":submission['contestId'],
                 "index": submission['problem']['index'],
@@ -71,7 +73,7 @@ class CodeforcesAPI:
 
     def save_requests_as_json(self, data, filename):
         try:
-            with open(filename, 'w') as file:
+            with open(os.path.join("./json/", filename), 'w') as file:
                 json.dump(data, file, indent=4)
         except:
             print('Failed to save data')
