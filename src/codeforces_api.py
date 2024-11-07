@@ -1,7 +1,5 @@
 import requests
-import json
 import datetime
-import os
 
 class CodeforcesAPI:
     def __init__(self):
@@ -71,9 +69,3 @@ class CodeforcesAPI:
     def format_all_submissions(self, submissions) -> list:
         return [self.format_submission(sub) for sub in self.only_ok_submissions(submissions)]
 
-    def save_requests_as_json(self, data, filename):
-        try:
-            with open(os.path.join("src/json/", filename), 'w') as file:
-                json.dump(data, file, indent=4)
-        except:
-            print('Failed to save data')
