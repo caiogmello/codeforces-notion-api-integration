@@ -22,7 +22,10 @@ class DBupdater:
         submissions = self._cf_api.get_submissions(self._user_handle)
         self._cf_submissions = self._cf_api.format_all_submissions(submissions)
 
-        self._db_data = self._notion_api.get_pages(1)
+        try:
+            self._db_data = json.loads(open(os.path.join("src/json/", 'notion_db.json'), 'r', encoding='utf8').read())
+        except:
+            self._db_data = self._notion_api.get_pages(1)
 
         print(f"Updating Notion '{self._db_info['title'][0]['text']['content']}' database...")
         if (len(self._db_data) == 0) or len(self._db_data[0]['properties']['Name']['rich_text']) == 0:
@@ -43,7 +46,8 @@ class DBupdater:
                 object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
 
             pbar.close()
-
+            
+        self._notion_api.get_pages(1)
         print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems.")
 
 
