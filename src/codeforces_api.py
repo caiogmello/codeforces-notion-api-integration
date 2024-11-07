@@ -73,7 +73,7 @@ class CodeforcesAPI:
 
     def save_requests_as_json(self, data, filename):
         try:
-            with open(os.path.join("./json/", filename), 'w') as file:
+            with open(os.path.join("src/json/", filename), 'w') as file:
                 json.dump(data, file, indent=4)
         except:
             print('Failed to save data')

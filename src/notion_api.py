@@ -1,6 +1,6 @@
 import json
 import requests
-from property_formatter import PropertyFormatter
+from src.property_formatter import PropertyFormatter
 import os
 
 class NotionAPI:
@@ -31,7 +31,6 @@ class NotionAPI:
 
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
 
-
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
         
@@ -45,8 +44,10 @@ class NotionAPI:
             data = response.json()
             results.extend(data["results"])
 
-        with open(os.path.join("./json/", 'notion_db.json'), 'w', encoding='utf8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        with open(os.path.join("src/json/", 'notion_db.json'), 'w', encoding='utf8') as f:
+            json.dump(results, f, ensure_ascii=False, indent=4)
+
+        self._formatter.set_db_data()
         
         return results
 
