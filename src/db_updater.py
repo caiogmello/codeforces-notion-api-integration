@@ -14,6 +14,7 @@ class DBupdater:
         self._notion_api.set_database_id(db_id)
         self._db_data = None
         self._cf_submissions = None
+        self._db_info = self._notion_api.get_database_info()
 
 
     def update_db(self) -> None:
@@ -21,9 +22,9 @@ class DBupdater:
         submissions = self._cf_api.get_submissions(self._user_handle)
         self._cf_submissions = self._cf_api.format_all_submissions(submissions)
 
-        self._db_data = self._notion_api.get_pages(300)
+        self._db_data = self._notion_api.get_pages(1)
 
-        print("Updating Notion database...")
+        print(f"Updating Notion '{self._db_info['title'][0]['text']['content']}' database...")
         if (len(self._db_data) == 0) or len(self._db_data[0]['properties']['Name']['rich_text']) == 0:
             for submission in tqdm(self._cf_submissions):
                 self._notion_api.create_page(submission)
@@ -43,7 +44,7 @@ class DBupdater:
 
             pbar.close()
 
-        print("Database updated successfully.")
+        print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems.")
 
 
 
