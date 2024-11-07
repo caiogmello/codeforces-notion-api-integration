@@ -1,7 +1,10 @@
 import json
 import requests
-from src.property_formatter import PropertyFormatter
 import os
+try:
+    from src.property_formatter import PropertyFormatter
+except:
+    from property_formatter import PropertyFormatter
 
 class NotionAPI:
     def __init__(self, token):
