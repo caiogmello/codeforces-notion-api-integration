@@ -4,10 +4,10 @@ import datetime
 
 class CodeforcesAPI:
     def __init__(self):
-        self.url = 'https://codeforces.com/api/'
+        self._url = 'https://codeforces.com/api/'
 
     def get_user_info(self, user: str) -> dict:
-        url = f'{self.url}user.info?handles={user}'
+        url = f'{self._url}user.info?handles={user}'
         response = requests.get(url)
         data = response.json()
 
@@ -23,7 +23,7 @@ class CodeforcesAPI:
         if initial is not None:
             paramaters += f'&from={initial}'
 
-        url = f'{self.url}user.status?{paramaters}'
+        url = f'{self._url}user.status?{paramaters}'
         response = requests.get(url)
         data = response.json()
 
