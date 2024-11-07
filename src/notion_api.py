@@ -46,10 +46,22 @@ class NotionAPI:
 
         with open(os.path.join("src/json/", 'notion_db.json'), 'w', encoding='utf8') as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
-
-        self._formatter.set_db_data()
         
         return results
+
+    def get_database_info(self):
+        url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}"
+        response = requests.get(url, headers=self._header)
+
+        if response.status_code != 200:
+            raise Exception(f"Request failed: {response.json()['message']}")
+        else:
+            with open(os.path.join("src/json/", 'notion_db_info.json'), 'w', encoding='utf8') as f:
+                json.dump(response.json(), f, ensure_ascii=False, indent=4)
+            
+            self._formatter.set_db_data()
+
+            return response.json()
 
     def set_database_id(self, database_id: str):
         self._DATABASE_ID = database_id
