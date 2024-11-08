@@ -7,7 +7,7 @@ except:
     from property_formatter import PropertyFormatter
 
 class NotionAPI:
-    def __init__(self, token):
+    def __init__(self, token, page_id):
 
         self._header = {
             "Authorization": f"Bearer {token}",
@@ -16,6 +16,7 @@ class NotionAPI:
         }
 
         self._TOKEN = token
+        self._PAGE_ID = page_id	
         self._DATABASE_ID = None
         self._formatter = PropertyFormatter()
 
@@ -81,7 +82,7 @@ class NotionAPI:
         else:
             return response.json()
         
-    def create_database(self, title: str):
+    def create_database(self, title: str = "CF problems"):
         url = "https://api.notion.com/v1/databases"
 
         payload = {
@@ -91,7 +92,7 @@ class NotionAPI:
             },
             "parent": {
                 "type": "page_id",
-                "page_id": self._DATABASE_ID
+                "page_id": self._PAGE_ID
             },
             "title": [
                 {
@@ -104,11 +105,14 @@ class NotionAPI:
             "properties": self._formatter.get_db_properties()
         }
 
+        
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
-
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
         else:
+            file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
+            with open(os.path.join("src/json/", file_name), 'w', encoding='utf8') as f:
+                json.dump(response.json(), f, ensure_ascii=False, indent=4)
             return response.json()
         
     def delete_page(self, page_id: str):
