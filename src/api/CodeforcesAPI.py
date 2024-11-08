@@ -1,9 +1,6 @@
 import requests
 import datetime
-try:
-    from src.exception_handler import ExceptionHandler
-except:
-    from exception_handler import ExceptionHandler
+from src.utilities.ExceptionHandler import ExceptionHandler
 
 class CodeforcesAPI:
     def __init__(self):

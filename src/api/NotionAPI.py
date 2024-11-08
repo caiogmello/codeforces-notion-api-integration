@@ -1,12 +1,8 @@
 import json
 import requests
 import os
-try:
-    from src.property_formatter import PropertyFormatter
-    from src.exception_handler import ExceptionHandler
-except:
-    from property_formatter import PropertyFormatter
-    from exception_handler import ExceptionHandler
+from src.utilities.PropertyFormatter import PropertyFormatter
+from src.utilities.ExceptionHandler import ExceptionHandler
 
 class NotionAPI:
     def __init__(self, token, page_id):

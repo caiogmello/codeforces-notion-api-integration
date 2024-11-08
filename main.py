@@ -1,7 +1,7 @@
-from src.db_updater import DBupdater
-from src.env_manager import EnvManager
-from src.console import Console
-from src.notion_api import NotionAPI
+from src.DbUpdater import DbUpdater
+from src.utilities.EnvManager import EnvManager
+from src.console.Console import Console
+from src.api.NotionAPI import NotionAPI
 from dotenv import load_dotenv
 import os
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
         if r == '1':
             console.take_a_while()
-            db_updater = DBupdater(env._notion_token, env._page_id, 
+            db_updater = DbUpdater(env._notion_token, env._page_id, 
                                    env._db_id, env._user_handle)
             db_updater.update_db()
         elif r == '2':

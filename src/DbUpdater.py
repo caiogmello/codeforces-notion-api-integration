@@ -1,14 +1,10 @@
 from tqdm import tqdm
 from datetime import datetime
-try:
-    from src.codeforces_api import CodeforcesAPI
-    from src.notion_api import NotionAPI
-except:
-    from codeforces_api import CodeforcesAPI
-    from notion_api import NotionAPI
+from src.api.CodeforcesAPI import CodeforcesAPI
+from src.api.NotionAPI import NotionAPI
 
 
-class DBupdater:
+class DbUpdater:
     def __init__(self, notion_token, page_id, db_id, user_handle):
         self._cf_api = CodeforcesAPI()
         self._notion_api = NotionAPI(notion_token, page_id)

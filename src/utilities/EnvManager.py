@@ -1,8 +1,5 @@
 from dotenv import load_dotenv
-try:
-    from src.console import Console
-except:
-    from console import Console
+from src.console.Console import Console
 import os
 import json
 

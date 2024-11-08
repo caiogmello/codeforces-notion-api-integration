@@ -10,7 +10,6 @@ class Console:
         print("You can find more information on how to obtain them in the README file. ")
         self.dots()
         print()
-    
 
     def get_user_input(self):
         notion_token = self.get_notion_token()
