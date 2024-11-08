@@ -43,10 +43,9 @@ class CodeforcesAPI:
             return None
 
     def format_submission(self, submission):
+        contest = 'contest'
         if submission['contestId'] > 5000:
             contest = 'gym'
-        else:
-            contest = 'contest'
 
         dct = {
                 "handle": submission['author']['members'][0]['handle'],

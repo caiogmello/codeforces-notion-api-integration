@@ -32,7 +32,6 @@ class DBupdater:
             for submission in tqdm(self._cf_submissions):
                 self._notion_api.create_page(submission)
         else:
-
             i = 0
             object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
             last_db_datetime = datetime.strptime(self._db_data[0]['properties']['Time']['date']['start'], '%Y-%m-%dT%H:%M:%S.%f%z')

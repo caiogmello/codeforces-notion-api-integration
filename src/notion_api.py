@@ -59,13 +59,13 @@ class NotionAPI:
 
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
-        else:
-            with open(os.path.join("src/json/", 'notion_db_info.json'), 'w', encoding='utf8') as f:
-                json.dump(response.json(), f, ensure_ascii=False, indent=4)
-            
-            self._formatter.set_db_data()
+        
+        with open(os.path.join("src/json/", 'notion_db_info.json'), 'w', encoding='utf8') as f:
+            json.dump(response.json(), f, ensure_ascii=False, indent=4)
+        
+        self._formatter.set_db_data()
 
-            return response.json()
+        return response.json()
 
     def set_database_id(self, database_id: str):
         self._DATABASE_ID = database_id
@@ -79,8 +79,8 @@ class NotionAPI:
 
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
-        else:
-            return response.json()
+        
+        return response.json()
         
     def create_database(self, title: str = "CF problems"):
         url = "https://api.notion.com/v1/databases"
@@ -107,13 +107,14 @@ class NotionAPI:
 
         
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
+        
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
-        else:
-            file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
-            with open(os.path.join("src/json/", file_name), 'w', encoding='utf8') as f:
-                json.dump(response.json(), f, ensure_ascii=False, indent=4)
-            return response.json()
+        
+        file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
+        with open(os.path.join("src/json/", file_name), 'w', encoding='utf8') as f:
+            json.dump(response.json(), f, ensure_ascii=False, indent=4)
+        return response.json()
         
     def delete_page(self, page_id: str):
         url = f"https://api.notion.com/v1/pages/{page_id}"
@@ -123,8 +124,8 @@ class NotionAPI:
         response = requests.patch(url, json=payload, headers=self._header)
         if response.status_code != 200:
             raise Exception(f"Request failed: {response.json()['message']}")
-        else:
-            return response.json()
+        
+        return response.json()
     
 
         
