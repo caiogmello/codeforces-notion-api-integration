@@ -2,14 +2,28 @@ import datetime
 import json
 import os
 
+
 class PropertyFormatter:
     def __init__(self):
-        self._colors = ["blue", "brown", "default", "gray", "green", "pink", "orange", "purple", "red", "yellow"]
+        self._colors = [
+            "blue",
+            "brown",
+            "default",
+            "gray",
+            "green",
+            "pink",
+            "orange",
+            "purple",
+            "red",
+            "yellow",
+        ]
         self._tag_colors = {}
         self._db_info = None
 
     def set_db_data(self):
-        with open(os.path.join("src/json/", 'notion_db_info.json'), 'r', encoding='utf8') as f:
+        with open(
+            os.path.join("src/json/", "notion_db_info.json"), "r", encoding="utf8"
+        ) as f:
             self._db_info = json.load(f)
         self._set_all_tag_colors()
 
@@ -25,6 +39,33 @@ class PropertyFormatter:
             "URL": self._format_url(submission["url"]),
         }
 
+    def get_db_properties(self):
+        return {
+            "Id": {
+                "title": {},
+            },
+            "ContestId": {
+                "rich_text": {},
+            },
+            "Name": {
+                "rich_text": {},
+            },
+            "Index": {
+                "rich_text": {},
+            },
+            "Rating": {
+                "number": {},
+            },
+            "Tags": {
+                "multi_select": {},
+            },
+            "Time": {
+                "date": {},
+            },
+            "URL": {"url": {}
+            },
+        }
+
     def _format_id(self, id: int) -> dict:
         return {
             "type": "title",
@@ -38,7 +79,10 @@ class PropertyFormatter:
         }
 
     def _format_name(self, name: str) -> dict:
-        return {"type": "rich_text", "rich_text": [{"type": "text", "text": {"content": name}}]}
+        return {
+            "type": "rich_text",
+            "rich_text": [{"type": "text", "text": {"content": name}}],
+        }
 
     def _format_index(self, index: str) -> dict:
         return {
@@ -60,7 +104,7 @@ class PropertyFormatter:
                 "end": None,
             },
         }
-    
+
     def _format_multi_select(self, tag: str):
         return {"name": tag, "color": self._get_tag_color(tag)}
 
@@ -72,7 +116,7 @@ class PropertyFormatter:
 
     def _format_url(self, url: str) -> dict:
         return {"type": "url", "url": url}
-    
+
     def _get_tag_color(self, tag: str) -> str:
         if tag not in self._tag_colors:
             self._tag_colors[tag] = self._get_color(tag)
@@ -80,10 +124,9 @@ class PropertyFormatter:
 
     def _get_color(self, tag) -> str:
         return self._colors[hash(tag) % len(self._colors)]
-    
+
     def _set_all_tag_colors(self):
-        for tag in self._db_info["properties"]["Tags"]["multi_select"]['options']:
+        for tag in self._db_info["properties"]["Tags"]["multi_select"]["options"]:
             self._tag_colors[tag["name"]] = tag["color"]
 
         return self._tag_colors
-

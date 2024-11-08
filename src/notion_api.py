@@ -81,6 +81,36 @@ class NotionAPI:
         else:
             return response.json()
         
+    def create_database(self, title: str):
+        url = "https://api.notion.com/v1/databases"
+
+        payload = {
+            "icon": {
+                "type": "emoji",
+                "emoji": "🪖"
+            },
+            "parent": {
+                "type": "page_id",
+                "page_id": self._DATABASE_ID
+            },
+            "title": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": title
+                    }
+                }
+            ],
+            "properties": self._formatter.get_db_properties()
+        }
+
+        response = requests.post(url, headers=self._header, data=json.dumps(payload))
+
+        if response.status_code != 200:
+            raise Exception(f"Request failed: {response.json()['message']}")
+        else:
+            return response.json()
+        
     def delete_page(self, page_id: str):
         url = f"https://api.notion.com/v1/pages/{page_id}"
 
