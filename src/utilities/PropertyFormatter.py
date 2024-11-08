@@ -62,9 +62,7 @@ class PropertyFormatter:
             "Time": {
                 "date": {},
             },
-            "URL": {
-                "url": {}
-            },
+            "URL": {"url": {}},
         }
 
     def _format_id(self, id: int) -> dict:

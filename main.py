@@ -11,7 +11,6 @@ if __name__ == '__main__':
     env = EnvManager()
 
     if (env.load_env()):
-        print("Loaded environment variables.")
         console.welcome_back()
     else:
         console.greetings()
@@ -25,12 +24,13 @@ if __name__ == '__main__':
         if os.getenv("DATABASE_ID") is None:
             console.new_database()
             db_info_json = notion_api.create_database(env._user_handle)
+            console.ok()
             
         env.set_db_id(db_info_json["id"])   
         env.write_env()
     
 
-    current_user = os.getenv("CF_HANDLE")
+    current_user = env._user_handle
     env.add_database_id(current_user, env._db_id) 
 
     while(True):
@@ -51,6 +51,7 @@ if __name__ == '__main__':
             else:
                 db_name = console.new_database()
                 new_db_info = notion_api.create_database(current_user)
+                console.ok()
                 env.set_db_id(new_db_info["id"])
 
             env.set_user_handle(current_user)
