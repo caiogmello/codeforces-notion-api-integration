@@ -62,7 +62,8 @@ class PropertyFormatter:
             "Time": {
                 "date": {},
             },
-            "URL": {"url": {}
+            "URL": {
+                "url": {}
             },
         }
 
