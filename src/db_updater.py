@@ -27,10 +27,7 @@ class DBupdater:
         submissions = self._cf_api.get_submissions(self._user_handle)
         self._cf_submissions = self._cf_api.format_all_submissions(submissions)
 
-        try:
-            self._db_data = json.loads(open(os.path.join("src/json/", 'notion_db.json'), 'r', encoding='utf8').read())
-        except:
-            self._db_data = self._notion_api.get_pages(1)
+        self._db_data = self._notion_api.get_pages(1)
 
         print(f"Updating Notion '{self._db_info['title'][0]['text']['content']}' database...")
         if (len(self._db_data) == 0) or len(self._db_data[0]['properties']['Name']['rich_text']) == 0:
@@ -38,19 +35,21 @@ class DBupdater:
                 self._notion_api.create_page(submission)
         else:
 
+            i = 0
             object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
             last_db_datetime = datetime.strptime(self._db_data[0]['properties']['Time']['date']['start'], '%Y-%m-%dT%H:%M:%S.%f%z')
-
-            i = 0
             while object_datetime > last_db_datetime:
                 i += 1
                 object_datetime = datetime.strptime(self._cf_submissions[i]['time'], '%d/%m/%Y %H:%M:%S').replace(tzinfo=datetime.now().astimezone().tzinfo)
             
+            if i == 1:
+                print("No new submissions to update. \n")
+                return
+            
             for j in tqdm(range(i-1)):
                 self._notion_api.create_page(self._cf_submissions[j])
             
-        self._notion_api.get_pages(1)
-        print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems.")
+        print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems. \n")
 
 
 
