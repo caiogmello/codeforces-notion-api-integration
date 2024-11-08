@@ -1,5 +1,6 @@
 .env
 __pycache__
+json
 notion_db.json
 notion_db_info.json
 a.ipynb
