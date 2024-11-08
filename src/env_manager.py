@@ -1,17 +1,25 @@
 from dotenv import load_dotenv
-from src.console import Console
+try:
+    from src.console import Console
+except:
+    from console import Console
 import os
 
 class EnvManager:
     def __init__(self):
         self._notion_token = None
+        self._page_id = None
         self._db_id = None
         self._user_handle = None
         self._console = Console()
     
-    def set_db_id(self, url: str) -> str:
-        self._db_id = url.split("?")[0].split("/")[-1]
+    def set_db_id(self, id) -> str:
+        self._db_id = id
         self._console.updated("database ID")
+
+    def set_page_id(self, url: str) -> str:
+        self._page_id = url.split("?")[0][-32:]
+        self._console.updated("Notion page ID")
 
     def set_user_handle(self, handle: str) -> str:
         self._user_handle =  handle
@@ -24,6 +32,7 @@ class EnvManager:
     def write_env(self) -> None:
         with open('.env', 'w') as f:
             f.write(f"NOTION_TOKEN={self._notion_token}\n")
+            f.write(f"PAGE_ID={self._page_id}\n")
             f.write(f"DATABASE_ID={self._db_id}\n")
             f.write(f"CF_HANDLE={self._user_handle}\n")
 
@@ -31,12 +40,11 @@ class EnvManager:
         load_dotenv()    
         try:
             self._notion_token = os.getenv("NOTION_TOKEN")
-            self._db_id = os.getenv("DATABASE_ID")
+            self._page_id = os.getenv("PAGE_ID")
             self._user_handle = os.getenv("CF_HANDLE")
+            self._db_id = os.getenv("DATABASE_ID")
         except:
             pass
 
-        return load_dotenv() and (self._notion_token is not None and self._db_id is not None and self._user_handle is not None)
-    
+        return load_dotenv() and (self._notion_token is not None and self._page_id is not None and self._db_id is not None and self._user_handle is not None)
 
-        
