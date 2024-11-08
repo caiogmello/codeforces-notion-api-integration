@@ -4,7 +4,6 @@ from src.console import Console
 from src.notion_api import NotionAPI
 from dotenv import load_dotenv
 import os
-import json
 
 
 if __name__ == '__main__':
@@ -24,14 +23,15 @@ if __name__ == '__main__':
         notion_api = NotionAPI(env._notion_token, env._page_id)
         db_info_json = None
         if os.getenv("DATABASE_ID") is None:
-            db_name = console.create_database()
-            db_info_json = notion_api.create_database(db_name)
+            console.new_database()
+            db_info_json = notion_api.create_database(env._user_handle)
             
         env.set_db_id(db_info_json["id"])   
         env.write_env()
     
 
     current_user = os.getenv("CF_HANDLE")
+    env.add_database_id(current_user, env._db_id) 
 
     while(True):
         r = console.select_option(current_user)
@@ -44,11 +44,17 @@ if __name__ == '__main__':
             db_updater.update_db()
         elif r == '2':
             current_user = console.get_user_handle()
-            db_name = console.new_database()
-            new_db_info = notion_api.create_database(current_user)
-            env.set_user_handle(current_user)
-            env.set_db_id(new_db_info["id"])
+            dbs_ids = env.load_databases_ids()
 
+            if current_user in dbs_ids:
+                env.set_db_id(dbs_ids[current_user])
+            else:
+                db_name = console.new_database()
+                new_db_info = notion_api.create_database(current_user)
+                env.set_db_id(new_db_info["id"])
+
+            env.set_user_handle(current_user)
+            env.add_database_id(current_user, env._db_id)
             env.write_env()
         elif r == '3':
             console.exit()
