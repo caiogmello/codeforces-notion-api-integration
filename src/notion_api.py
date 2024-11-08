@@ -3,8 +3,10 @@ import requests
 import os
 try:
     from src.property_formatter import PropertyFormatter
+    from src.exception_handler import ExceptionHandler
 except:
     from property_formatter import PropertyFormatter
+    from exception_handler import ExceptionHandler
 
 class NotionAPI:
     def __init__(self, token, page_id):
@@ -22,7 +24,7 @@ class NotionAPI:
 
     def get_pages(self, num_pages: int):
         if self._DATABASE_ID is None:
-            raise Exception("Database ID not set")
+            raise ExceptionHandler("Database ID not set")
 
         url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
 
@@ -36,7 +38,7 @@ class NotionAPI:
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
 
         if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
+            raise ExceptionHandler(response.json()['message'])
         
         data = response.json()
         results = data["results"]
@@ -58,14 +60,26 @@ class NotionAPI:
         response = requests.get(url, headers=self._header)
 
         if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
-        
+            raise ExceptionHandler(response.json()['message'])
+            
         with open(os.path.join("src/json/", 'notion_db_info.json'), 'w', encoding='utf8') as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
         
         self._formatter.set_db_data()
 
         return response.json()
+    
+    def get_page_info(self):
+        url = f"https://api.notion.com/v1/pages/{self._PAGE_ID}"
+        response = requests.get(url, headers=self._header)
+
+        if response.status_code != 200:
+            raise ExceptionHandler(response.json()['message'])
+        
+        with open(os.path.join("src/json/", 'notion_page_info.json'), 'w', encoding='utf8') as f:
+            json.dump(response.json(), f, ensure_ascii=False, indent=4)
+        
+        return response.json
 
     def set_database_id(self, database_id: str):
         self._DATABASE_ID = database_id
@@ -78,7 +92,7 @@ class NotionAPI:
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
 
         if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
+            raise ExceptionHandler(response.json()['message'])
         
         return response.json()
         
@@ -107,9 +121,8 @@ class NotionAPI:
 
         
         response = requests.post(url, headers=self._header, data=json.dumps(payload))
-        
         if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
+            raise ExceptionHandler(response.json()['message'])
         
         file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
         with open(os.path.join("src/json/", file_name), 'w', encoding='utf8') as f:
@@ -123,7 +136,7 @@ class NotionAPI:
         
         response = requests.patch(url, json=payload, headers=self._header)
         if response.status_code != 200:
-            raise Exception(f"Request failed: {response.json()['message']}")
+            raise ExceptionHandler(response.json()['message'])
         
         return response.json()
     

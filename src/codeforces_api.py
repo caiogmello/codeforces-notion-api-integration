@@ -1,5 +1,9 @@
 import requests
 import datetime
+try:
+    from src.exception_handler import ExceptionHandler
+except:
+    from exception_handler import ExceptionHandler
 
 class CodeforcesAPI:
     def __init__(self):
@@ -11,7 +15,7 @@ class CodeforcesAPI:
         data = response.json()
 
         if data['status'] == 'FAILED':
-            raise Exception("CodeForces Request failed: " + data['comment'])
+            raise ExceptionHandler(data['comment'])
 
         return data
 
@@ -27,7 +31,7 @@ class CodeforcesAPI:
         data = response.json()
 
         if data['status'] == 'FAILED':
-            raise Exception("CodeForces Request failed: " + data['comment'])
+            raise ExceptionHandler(data['comment'])
         
         return data
 

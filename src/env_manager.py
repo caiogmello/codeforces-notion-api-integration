@@ -4,6 +4,7 @@ try:
 except:
     from console import Console
 import os
+import json
 
 class EnvManager:
     def __init__(self):
@@ -48,3 +49,20 @@ class EnvManager:
 
         return load_dotenv() and (self._notion_token is not None and self._page_id is not None and self._db_id is not None and self._user_handle is not None)
 
+
+    def load_databases_ids(self) -> list:
+        db_ids = {"init": None}  
+        try:
+            with open(os.path.join("src/json/", 'databases_ids.json'), 'r') as f:
+                db_ids = json.load(f)
+        except:
+            with open(os.path.join("src/json/", 'databases_ids.json'), 'w', encoding='utf8') as f:
+                json.dump(db_ids, f, ensure_ascii=False, indent=4)    
+
+        return db_ids
+    
+    def add_database_id(self, user_handle: str, db_id: str) -> None:
+        db_ids = self.load_databases_ids()
+        db_ids[user_handle] = db_id
+        with open(os.path.join("src/json/", 'databases_ids.json'), 'w', encoding='utf8') as f:
+            json.dump(db_ids, f, ensure_ascii=False, indent=4)
