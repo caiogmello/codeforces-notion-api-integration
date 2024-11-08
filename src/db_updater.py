@@ -1,5 +1,3 @@
-import os
-import json
 from tqdm import tqdm
 from datetime import datetime
 try:
@@ -11,9 +9,9 @@ except:
 
 
 class DBupdater:
-    def __init__(self, notion_token, db_id, user_handle):
+    def __init__(self, notion_token, page_id, db_id, user_handle):
         self._cf_api = CodeforcesAPI()
-        self._notion_api = NotionAPI(notion_token)
+        self._notion_api = NotionAPI(notion_token, page_id)
         self._db_id = db_id
         self._user_handle = user_handle
         self._notion_api.set_database_id(db_id)
@@ -48,8 +46,8 @@ class DBupdater:
             
             for j in tqdm(range(i-1)):
                 self._notion_api.create_page(self._cf_submissions[j])
-            
-        print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems. \n")
+
+            print(f"Database {self._db_info['url']} updated successfully with new {i-1} problems. \n")
 
 
 

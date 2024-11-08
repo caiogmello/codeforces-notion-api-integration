@@ -14,18 +14,18 @@ class Console:
 
     def get_user_input(self):
         notion_token = self.get_notion_token()
-        db_id = self.get_database_url()
+        page_id = self.get_database_url()
         user_handle = self.get_user_handle()
 
-        return notion_token, db_id, user_handle
+        return notion_token, page_id, user_handle
     
     def get_database_url(self):
-        db_id = input(self.bold("Enter your Notion database URL: "))
+        page_id = input(self.bold("Enter your Notion Page URL: "))
         print()
-        return db_id
+        return page_id
     
     def get_user_handle(self):
-        user_handle = input(self.bold("Enter your Codeforces handle (username): "))
+        user_handle = input(self.bold("Enter the Codeforces handle (username): "))
         print()
         return user_handle
     
@@ -46,20 +46,22 @@ class Console:
         print()
 
     
-    def select_option(self):
+    def select_option(self, db_name):
         self.dots("_", 60)
         print(self.bold("SELECT AN OPTION:"))
-        print(self.bold(self.red('1. Update the database')))
+        print(self.bold(self.red(f"1. Update the {db_name}'s database")))
         print(f"{self.bold('2.')} Change the Codeforces handle")
-        print(f"{self.bold('3.')} Change your database")
-        print(f"{self.bold('4.')} Change your integration token")
-        print(f"{self.bold('5.')} Exit")
+        print(f"{self.bold('3.')} Exit")
         option = input("R: ")
         self.dots("_", 60)
 
         print()
 
         return option
+    
+    def new_database(self):
+        print("Creating a new Notion Database...")
+
     
     def exit(self):
         print("\nGoodbye.")
