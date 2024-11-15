@@ -7,6 +7,11 @@ from src.console.Console import Console
 
 class DbUpdater:
     def __init__(self, notion_token, page_id, db_id, user_handle):
+        """
+        Class to update the Notion database with the new submissions.
+        Interaction with the Codeforces API and the Notion API.
+        """
+
         self._cf_api = CodeforcesAPI()
         self._notion_api = NotionAPI(notion_token, page_id)
         self._db_id = db_id
@@ -18,6 +23,9 @@ class DbUpdater:
 
 
     def update_db(self) -> None:
+        """
+        Update the Notion database with the new submissions.
+        """
         print(f"Getting {self._user_handle} public Codeforces submissions...")
         submissions = self._cf_api.get_submissions(self._user_handle)
         self._cf_submissions = self._cf_api.format_all_submissions(submissions)
@@ -32,7 +40,6 @@ class DbUpdater:
 
         print(f"Updating Notion '{self._db_info['title'][0]['text']['content']}' database...")
         i = 0
-
 
         new_submissions = []
         for submission in reversed(self._cf_submissions):

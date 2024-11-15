@@ -6,13 +6,16 @@ import json
 
 class EnvManager:
     def __init__(self):
-        self._notion_token = None
-        self._page_id = None
-        self._db_id = None
-        self._user_handle = None
+        """
+        Class to manage the environment variables and the databases IDs.
+        """
+        self._notion_token: str = None
+        self._page_id: str = None
+        self._db_id: str = None
+        self._user_handle: str = None
         self._console = Console()
 
-    def set_db_id(self, id) -> str:
+    def set_db_id(self, id: str) -> str:
         self._db_id = id
 
     def set_page_id(self, url: str) -> str:
@@ -25,6 +28,9 @@ class EnvManager:
         self._notion_token = token
 
     def write_env(self) -> None:
+        """
+        Write the environment (NOTION_TOKEN, PAGE_ID, DATABASE_ID, CF_HANDLE) variables to the .env file.
+        """
         with open(".env", "w") as f:
             f.write(f"NOTION_TOKEN={self._notion_token}\n")
             f.write(f"PAGE_ID={self._page_id}\n")
@@ -32,6 +38,10 @@ class EnvManager:
             f.write(f"CF_HANDLE={self._user_handle}\n")
 
     def load_env(self) -> bool:
+        """
+        Load the environment variables from the .env file.
+        """
+
         load_dotenv()
         try:
             self._notion_token = os.getenv("NOTION_TOKEN")
@@ -49,6 +59,10 @@ class EnvManager:
         )
 
     def load_databases_ids(self) -> list:
+        """
+        Load the databases IDs from the databases_ids.json file.
+        """
+
         db_ids = {"init": None}
         try:
             with open(os.path.join("src/json/", "databases_ids.json"), "r") as f:
@@ -62,6 +76,10 @@ class EnvManager:
         return db_ids
 
     def add_database_id(self, user_handle: str, db_id: str) -> None:
+        """
+        Add a new database ID to the databases_ids.json file.
+        """
+
         db_ids = self.load_databases_ids()
         db_ids[user_handle] = db_id
         with open(

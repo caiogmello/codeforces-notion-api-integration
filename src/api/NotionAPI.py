@@ -6,27 +6,38 @@ from src.utilities.ExceptionHandler import ExceptionHandler
 
 
 class NotionAPI:
-    def __init__(self, token, page_id):
 
+    def __init__(self, token: str, page_id: str) -> "NotionAPI":
+        """
+        Class to interact with the Notion API and get the database information and post the new submissions.
+
+        - token: API token for Notion API
+        - page_id: ID of the page where the database is/will be located
+        """
         self._header = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
             "Notion-Version": "2021-05-13",
         }
 
-        self._TOKEN = token
-        self._PAGE_ID = page_id
-        self._DATABASE_ID = None
+        self._TOKEN: str = token
+        self._PAGE_ID: str = page_id
+        self._DATABASE_ID: str = None
         self._formatter = PropertyFormatter()
 
-    def get_pages(self, num_pages: int = None):
+    def get_pages(self, num_pages: int = None) -> list[dict]:
+        """
+        Get all 'num_pages' pages from the database,
+        or get all pages if 'num_pages' is None.
+        """
+
         if self._DATABASE_ID is None:
             raise ExceptionHandler("Database ID not set")
 
         url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
 
         get_all = num_pages is None
-        page_size = 100 if get_all else num_pages   
+        page_size = 100 if get_all else num_pages
 
         payload = {
             "page_size": page_size,
@@ -41,13 +52,13 @@ class NotionAPI:
         data = response.json()
         results = data["results"]
 
-
         while data["has_more"] and get_all:
-            payload = {"page_size": page_size,
-                        "start_cursor": data["next_cursor"],
-                         "sorts": [{"property": "Time",
-                                     "direction": "descending"}]}
-            
+            payload = {
+                "page_size": page_size,
+                "start_cursor": data["next_cursor"],
+                "sorts": [{"property": "Time", "direction": "descending"}],
+            }
+
             url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
             response = requests.post(url, json=payload, headers=self._header)
             data = response.json()
@@ -58,11 +69,13 @@ class NotionAPI:
         ) as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
 
-        # print(f"Number of pages: {len(results)}")
-
         return results
 
-    def get_database_info(self):
+    def get_database_info(self) -> dict:
+        """
+        Get information about the database. Like the title, properties, etc.
+        """
+
         url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}"
         response = requests.get(url, headers=self._header)
 
@@ -78,7 +91,11 @@ class NotionAPI:
 
         return response.json()
 
-    def get_page_info(self):
+    def get_page_info(self) -> dict:
+        """
+        Get information about the page. Like the title, properties, etc.
+        """
+
         url = f"https://api.notion.com/v1/pages/{self._PAGE_ID}"
         response = requests.get(url, headers=self._header)
 
@@ -92,10 +109,15 @@ class NotionAPI:
 
         return response.json
 
-    def set_database_id(self, database_id: str):
+    def set_database_id(self, database_id: str) -> None:
         self._DATABASE_ID = database_id
 
-    def create_page(self, data: dict):
+    def create_page(self, data: dict) -> dict:
+        """
+        Create a new page in the database. All rows in a Notion Database are pages with specific properties.
+        So, this function creates a new row in the database.
+        """
+
         url = "https://api.notion.com/v1/pages"
 
         payload = {
@@ -110,7 +132,11 @@ class NotionAPI:
 
         return response.json()
 
-    def create_database(self, title: str = "CF problems"):
+    def create_database(self, title: str = "CF problems") -> dict:
+        """
+        Create a new database in the parent page.
+        You may create a new database for a new user.
+        """
         url = "https://api.notion.com/v1/databases"
 
         payload = {
@@ -127,15 +153,4 @@ class NotionAPI:
         file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
         with open(os.path.join("src/json/", file_name), "w", encoding="utf8") as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
-        return response.json()
-
-    def delete_page(self, page_id: str):
-        url = f"https://api.notion.com/v1/pages/{page_id}"
-
-        payload = {"archived": True}
-
-        response = requests.patch(url, json=payload, headers=self._header)
-        if response.status_code != 200:
-            raise ExceptionHandler(response.json()["message"])
-
         return response.json()
