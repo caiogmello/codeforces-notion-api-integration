@@ -19,14 +19,17 @@ class NotionAPI:
         self._DATABASE_ID = None
         self._formatter = PropertyFormatter()
 
-    def get_pages(self, num_pages: int):
+    def get_pages(self, num_pages: int = None):
         if self._DATABASE_ID is None:
             raise ExceptionHandler("Database ID not set")
 
         url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
 
+        get_all = num_pages is None
+        page_size = 100 if get_all else num_pages   
+
         payload = {
-            "page_size": num_pages,
+            "page_size": page_size,
             "sorts": [{"property": "Time", "direction": "descending"}],
         }
 
@@ -38,8 +41,13 @@ class NotionAPI:
         data = response.json()
         results = data["results"]
 
-        while data["has_more"] and len(results) < num_pages:
-            payload = {"page_size": num_pages, "start_cursor": data["next_cursor"]}
+
+        while data["has_more"] and get_all:
+            payload = {"page_size": page_size,
+                        "start_cursor": data["next_cursor"],
+                         "sorts": [{"property": "Time",
+                                     "direction": "descending"}]}
+            
             url = f"https://api.notion.com/v1/databases/{self._DATABASE_ID}/query"
             response = requests.post(url, json=payload, headers=self._header)
             data = response.json()
@@ -49,6 +57,8 @@ class NotionAPI:
             os.path.join("src/json/", "notion_db.json"), "w", encoding="utf8"
         ) as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
+
+        # print(f"Number of pages: {len(results)}")
 
         return results
 
