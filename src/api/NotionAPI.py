@@ -25,7 +25,7 @@ class NotionAPI:
         self._DATABASE_ID: str = None
         self._formatter = PropertyFormatter()
 
-    def get_pages(self, num_pages: int = None) -> list[dict]:
+    def get_pages(self, num_pages: int = None) -> list:
         """
         Get all 'num_pages' pages from the database,
         or get all pages if 'num_pages' is None.
