@@ -7,9 +7,9 @@ import os
 
 
 if __name__ == "__main__":
+    os.mkdir("json") if not os.path.exists("json") else None
     console = Console()
     env = EnvManager()
-
     if env.load_env():
         console.welcome_back()
     else:
