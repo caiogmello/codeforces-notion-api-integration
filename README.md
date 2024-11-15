@@ -2,7 +2,7 @@
 
 This project integrates [Codeforces](https://codeforces.com/) with [Notion](https://notion.so/), allowing you to visualize your solved problems and create interactive views for analysis.
 
-![Pie Chart](./imgs/slices_chart.PNG)
+![Pie Chart](./imgs/pie_chart.png)
 ![Bar Chart](./imgs/bar_chart.PNG) 
 
 ## Setup Instructions
@@ -56,7 +56,9 @@ When prompted, provide the following:
 2. The **Parent Page URL**.
 3. Your **Codeforces username**.
 
-After execution, a new database will be created in your Parent Page, named after your Codeforces username. You can organize and personalize it, and even add [charts](https://www.notion.so/help/charts) for better visualization.
+After execution, a new database will be created in your Parent Page, named as your Codeforces username. You can organize and personalize it, and even add [charts](https://www.notion.so/help/charts) for better visualization.
+
+Therefore, you can create Databases from how many users you want, just changing the codeforces username on the CLI command.
 
 ![Tourist](./imgs/tourist.png)
 
@@ -76,7 +78,7 @@ After execution, a new database will be created in your Parent Page, named after
 This project is built using pure Python, without any additional frameworks, focusing on simplicity and efficiency. It leverages the following libraries, listed in the ``requirements.txt`` file:
 
 - ``requests``: To make HTTP requests to the Codeforces and Notion APIs.
-- ``dotenv`` (optional): To securely manage environment variables, such as API tokens.
+- ``dotenv``: To securely manage environment variables, such as API tokens.
 - ``json`` (native): To process and structure the data retrieved from the APIs.
 
 ### Key Features of the Code:
