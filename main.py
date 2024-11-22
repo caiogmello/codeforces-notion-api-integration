@@ -5,9 +5,11 @@ from src.api.NotionAPI import NotionAPI
 from dotenv import load_dotenv
 import os
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+json_dir = os.path.join(script_dir, "src", "json")
 
 if __name__ == "__main__":
-    os.mkdir("./src/json") if not os.path.exists("./src/json") else None
+    os.mkdir(json_dir) if not os.path.exists(json_dir) else None
     console = Console()
     env = EnvManager()
     if env.load_env():

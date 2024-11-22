@@ -4,6 +4,8 @@ import os
 from src.utilities.PropertyFormatter import PropertyFormatter
 from src.utilities.ExceptionHandler import ExceptionHandler
 
+script_dir = os.path.dirname(os.path.abspath(os.path.join(__file__, "../../")))
+json_dir = os.path.join(script_dir, "src", "json")
 
 class NotionAPI:
 
@@ -65,7 +67,7 @@ class NotionAPI:
             results.extend(data["results"])
 
         with open(
-            os.path.join("src/json/", "notion_db.json"), "w", encoding="utf8"
+            os.path.join(json_dir, "notion_db.json"), "w", encoding="utf8"
         ) as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
 
@@ -83,7 +85,7 @@ class NotionAPI:
             raise ExceptionHandler(response.json()["message"])
 
         with open(
-            os.path.join("src/json/", "notion_db_info.json"), "w", encoding="utf8"
+            os.path.join(json_dir, "notion_db_info.json"), "w", encoding="utf8"
         ) as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
 
@@ -103,7 +105,7 @@ class NotionAPI:
             raise ExceptionHandler(response.json()["message"])
 
         with open(
-            os.path.join("src/json/", "notion_page_info.json"), "w", encoding="utf8"
+            os.path.join(json_dir, "notion_page_info.json"), "w", encoding="utf8"
         ) as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
 
@@ -151,6 +153,6 @@ class NotionAPI:
             raise ExceptionHandler(response.json()["message"])
 
         file_name = f'{"_".join(title.lower().split(" "))}_notion_db_info.json'
-        with open(os.path.join("src/json/", file_name), "w", encoding="utf8") as f:
+        with open(os.path.join(json_dir, file_name), "w", encoding="utf8") as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
         return response.json()

@@ -2,6 +2,8 @@ import datetime
 import json
 import os
 
+script_dir = os.path.dirname(os.path.abspath(os.path.join(__file__, "../../")))
+json_dir = os.path.join(script_dir, "src", "json")
 
 class PropertyFormatter:
     def __init__(self):
@@ -29,7 +31,7 @@ class PropertyFormatter:
         Set the database information from the JSON file to avoid coloring tag errors.
         """
         with open(
-            os.path.join("src/json/", "notion_db_info.json"), "r", encoding="utf8"
+            os.path.join(json_dir, "notion_db_info.json"), "r", encoding="utf8"
         ) as f:
             self._db_info = json.load(f)
         self._set_all_tag_colors()

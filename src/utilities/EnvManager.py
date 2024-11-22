@@ -4,6 +4,9 @@ import os
 import json
 
 
+script_dir = os.path.dirname(os.path.abspath(os.path.join(__file__, "../../")))
+json_dir = os.path.join(script_dir, "src", "json")
+
 class EnvManager:
     def __init__(self):
         """
@@ -65,11 +68,11 @@ class EnvManager:
 
         db_ids = {"init": None}
         try:
-            with open(os.path.join("src/json/", "databases_ids.json"), "r") as f:
+            with open(os.path.join(json_dir, "databases_ids.json"), "r") as f:
                 db_ids = json.load(f)
         except:
             with open(
-                os.path.join("src/json/", "databases_ids.json"), "w", encoding="utf8"
+                os.path.join(json_dir, "databases_ids.json"), "w", encoding="utf8"
             ) as f:
                 json.dump(db_ids, f, ensure_ascii=False, indent=4)
 
@@ -83,6 +86,6 @@ class EnvManager:
         db_ids = self.load_databases_ids()
         db_ids[user_handle] = db_id
         with open(
-            os.path.join("src/json/", "databases_ids.json"), "w", encoding="utf8"
+            os.path.join(json_dir, "databases_ids.json"), "w", encoding="utf8"
         ) as f:
             json.dump(db_ids, f, ensure_ascii=False, indent=4)
